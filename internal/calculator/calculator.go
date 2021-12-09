@@ -2,38 +2,33 @@ package calculator
 
 import (
 	"errors"
-	"strconv"
 )
 
-func Calculator(operator string, operands []string) (CalculatorResult, error) {
-	var result CalculatorResult
+func GetResult(operator string, operands []float64) (float64, error) {
+	var result float64
 	var error error
-	temp, err := strconv.ParseFloat(operands[0], 64)
-	if err != nil {
-		return CalculatorResult{}, err
-	}
-	for i := 1; i < len(operands); i++ {
-		number, err := strconv.ParseFloat(operands[i], 64)
-		if err != nil {
-			return CalculatorResult{}, err
+	for i, v := range operands {
+		number:= v
+		if i==0 {
+			result = v
+			number = 0
 		}
 		switch operator {
 			case "add":
-				temp += number
+				result += number
 			case "substract":
-				temp -= number
+				result -= number
 			case "divide":
 				if(number == 0) {
 					error = errors.New("impossible division by zero")
 				}
-				temp /= number
+				result /= number
 			case "multiply":
-				temp *= number
+				result *= number
 			default:
 				error = errors.New("undefined operator")
 		}
 	}
-	result.Result = temp
 	return result, error
 }
 

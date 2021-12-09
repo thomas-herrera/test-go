@@ -7,13 +7,14 @@ import (
 	"github.com/mercadolibre/fury_go-core/pkg/web"
 )
 
-var FuncCalculator = calculator.Calculator
+var FuncCalculator = calculator.GetResult
 var FuncCalculatorMemory = calculator.CalculatorMemory
 var FuncGetCalculatorMemory = calculator.GetCalculatorMemory
 
 func Calculate() web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		var req RequestCalculate
+		var res ResponseCalculate
 		if err := web.DecodeJSON(r, &req); err != nil {
 			return err
 		}
@@ -21,8 +22,8 @@ func Calculate() web.Handler {
 		if err != nil {
 			return err
 		}
-
-		return web.EncodeJSON(w, response, http.StatusOK)
+		res.Result = response
+		return web.EncodeJSON(w, res, http.StatusOK)
 	}
 }
 

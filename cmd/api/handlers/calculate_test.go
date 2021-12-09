@@ -2,7 +2,6 @@ package handlers_test
 
 import (
 	"main/cmd/api/handlers"
-	"main/internal/calculator"
 
 	"errors"
 	"io/ioutil"
@@ -20,19 +19,13 @@ import (
 var MemoryMap map[string]float64
 var errorString string = "test error"
 
-func mockCalculator(operator string, operands []string) (calculator.CalculatorResult, error) {
-	result := calculator.CalculatorResult{
-		Result: 6,
-	}
-	return result, nil
+func mockCalculator(operator string, operands []float64) (float64, error) {
+	return 6, nil
 }
 
-func mockFailCalculator(operator string, operands []string) (calculator.CalculatorResult, error) {
-	result := calculator.CalculatorResult{
-		Result: 0,
-	}
+func mockFailCalculator(operator string, operands []float64) (float64, error) {
 	var errMock error = errors.New("test error")
-	return result, errMock
+	return 0, errMock
 }
 
 func mockCalculatorMemory(memoryMap map[string]float64, name string, add bool, value float64) string{
@@ -53,11 +46,11 @@ func TestCalculate(t *testing.T) {
 	handlers.Api(app, MemoryMap)
 	handlers.FuncCalculator = mockCalculator
 	//Act
-	bodyReader := strings.NewReader(`{"operator": "add", "operands": ["1","2","3"]}`)
+	bodyReader := strings.NewReader(`{"operator": "add", "operands": [1, 2, 3]}`)
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/do", bodyReader)
 	app.Router.ServeHTTP(w, r)
-	res := calculator.CalculatorResult{}
+	res := handlers.ResponseCalculate{}
 	json.Unmarshal(w.Body.Bytes(), &res)
 	//Assert
 	assert.EqualValues(t, 200, w.Code)
@@ -73,7 +66,7 @@ func TestFailCalculate(t *testing.T) {
 	handlers.Api(app, MemoryMap)
 	handlers.FuncCalculator = mockFailCalculator
 	//Act
-	bodyReader := strings.NewReader(`{"operator": "adda", "operands": ["1","2","3"]}`)
+	bodyReader := strings.NewReader(`{"operator": "adda", "operands": [1, 2, 3]}`)
 	w := httptest.NewRecorder()
 	r := httptest.NewRequest(http.MethodPost, "/do", bodyReader)
 	app.Router.ServeHTTP(w, r)
@@ -110,7 +103,7 @@ func TestGetCalculateMemory(t *testing.T) {
 	handlers.FuncGetCalculatorMemory = mockGetCalculatorMemory
 	//Act
 	w := httptest.NewRecorder()
-	r := httptest.NewRequest(http.MethodGet, "/memory/blanco", nil)
+	r := httptest.NewRequest(http.MethodGet, "/memory/blanco",nil)
 	app.Router.ServeHTTP(w, r)
 	//Assert
 	assert.EqualValues(t, 200, w.Code)
