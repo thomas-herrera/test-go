@@ -43,14 +43,17 @@ func (c *Calculator) GetResult(operator string, operands []float64) (float64, er
 						result += number
 					case "substract":
 						result -= number
-					case "divide":
-						if(number == 0) {
-							error = errors.New("impossible division by zero")
-						}
-						result /= number
 					case "multiply":
 						result *= number
+					case "divide":
+						if(number == 0) {
+							result = 0
+							error = errors.New("impossible division by zero")
+						} else {
+							result /= number
+						}
 					default:
+						result = 0
 						error = errors.New("undefined operator")
 				}
 			}
