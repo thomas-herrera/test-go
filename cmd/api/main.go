@@ -2,6 +2,7 @@ package main
 
 import (
 	"main/cmd/api/handlers"
+	"main/internal/calculator"
 
 	"github.com/mercadolibre/fury_go-platform/pkg/fury"
 )
@@ -12,22 +13,15 @@ func main() {
 	}
 }
 
-var MemoryMap map[string]float64
-
 func run() error {
 	app, err := fury.NewWebApplication()
 	if err != nil {
 		return err
 	}
-	
-	MemoryMap = make(map[string]float64)
-	MemoryMap["blanco"] = 11
-	MemoryMap["rojo"] = 4
-	MemoryMap["azul"] = 25
-	MemoryMap["negro"] = 20
-	MemoryMap["amarillo"] = 7
 
-	handlers.Api(app, MemoryMap)
+	calculator := calculator.NewCalculator()
+
+	handlers.Api(app, calculator)
 
 	return app.Run()
 }

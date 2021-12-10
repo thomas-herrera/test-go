@@ -6,9 +6,9 @@ import (
 	"github.com/mercadolibre/fury_go-platform/pkg/fury"
 )
 
-func Api(app *fury.Application, memoryMap map[string]float64) {
+func Api(app *fury.Application, calculator Calculator) {
 
-	app.Router.Post("/do", Calculate(), web.AcceptJSON())
-	app.Router.Post("/memory/{name}", CalculateMemory(memoryMap), web.AcceptJSON())
-	app.Router.Get("/memory/{name}", GetMemory(memoryMap), web.AcceptJSON())
+	app.Router.Post("/do", Calculate(calculator), web.AcceptJSON())
+	app.Router.Post("/memory/{name}", CalculateMemory(calculator), web.AcceptJSON())
+	app.Router.Get("/memory/{name}", GetMemory(calculator), web.AcceptJSON())
 }

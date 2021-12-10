@@ -1,24 +1,26 @@
 package handlers
 
 import (
-	"main/internal/calculator"
 	"net/http"
 
 	"github.com/mercadolibre/fury_go-core/pkg/web"
 )
 
-var FuncCalculator = calculator.GetResult
-var FuncCalculatorMemory = calculator.CalculatorMemory
-var FuncGetCalculatorMemory = calculator.GetCalculatorMemory
+type Calculator interface {
+	GetResult(operator string, operands []float64) (float64, error)
+	ModifyMemory(name string, add bool, value float64) string
+	GetCalculatorMemory(name string) float64
+}
 
-func Calculate() web.Handler {
+
+func Calculate(calculator Calculator) web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		var req RequestCalculate
 		var res ResponseCalculate
 		if err := web.DecodeJSON(r, &req); err != nil {
 			return err
 		}
-		response, err := FuncCalculator(req.Operator, req.Operands)
+		response, err := calculator.GetResult(req.Operator, req.Operands)
 		if err != nil {
 			return err
 		}
@@ -27,22 +29,22 @@ func Calculate() web.Handler {
 	}
 }
 
-func CalculateMemory(memoryMap map[string]float64) web.Handler {
+func CalculateMemory(calculator Calculator) web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		var req RequestMemory
 		name := web.Params(r)["name"]
 		if err := web.DecodeJSON(r, &req); err != nil {
 			return err
 		}
-		response := FuncCalculatorMemory(memoryMap, name, req.Add, req.Value)
+		response := calculator.ModifyMemory(name, req.Add, req.Value)
 		return web.EncodeJSON(w, response, http.StatusOK)
 	}
 }
 
-func GetMemory(memoryMap map[string]float64) web.Handler {
+func GetMemory(calculator Calculator) web.Handler {
 	return func(w http.ResponseWriter, r *http.Request) error {
 		name := web.Params(r)["name"]
-		response := FuncGetCalculatorMemory(name, memoryMap)
+		response := calculator.GetCalculatorMemory(name)
 		return web.EncodeJSON(w, response, http.StatusOK)
 	}
 }
