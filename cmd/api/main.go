@@ -19,7 +19,7 @@ func run() error {
 		return err
 	}
 
-	calculator := calculator.NewCalculator()
+	calculator := calculator.New()
 
 	handlers.Api(app, calculator)
 

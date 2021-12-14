@@ -2,27 +2,28 @@ package handlers_test
 
 import (
 	"main/cmd/api/handlers"
+	"main/internal/calculator"
 
+	"encoding/json"
 	"errors"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
-	"encoding/json"
 
 	"github.com/mercadolibre/fury_go-platform/pkg/fury"
 	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/mock"
+	"github.com/stretchr/testify/require"
 )
 
 type MockCalculator struct {
 	mock.Mock
 }
 
-func (m *MockCalculator) GetResult(operator string, operands []float64) (float64, error) {
-	args := m.Called(operator, operands)
+func (m *MockCalculator) GetResult(operator string, operands []float64, storage calculator.Storage) (float64, error) {
+	args := m.Called(operator, operands, storage)
 	return args.Get(0).(float64), args.Error(1)
 }
 

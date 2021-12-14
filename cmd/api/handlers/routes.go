@@ -9,6 +9,4 @@ import (
 func Api(app *fury.Application, calculator Calculator) {
 
 	app.Router.Post("/do", Calculate(calculator), web.AcceptJSON())
-	app.Router.Post("/memory/{name}", CalculateMemory(calculator), web.AcceptJSON())
-	app.Router.Get("/memory/{name}", GetMemory(calculator), web.AcceptJSON())
 }

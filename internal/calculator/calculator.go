@@ -6,20 +6,17 @@ import (
 
 type Calculator struct {
 	memory float64
-	memoryMap map[string]float64
 }
 
-func NewCalculator() *Calculator {
-	calculatorMap := make(map[string]float64)
-	calculatorMap["blanco"] = 11
-	calculatorMap["rojo"] = 4
-	calculatorMap["azul"] = 25
-	calculatorMap["negro"] = 20
-	calculatorMap["amarillo"] = 7
-	return &Calculator{memory: 0, memoryMap: calculatorMap}
+func New() *Calculator {
+	return &Calculator{memory: 0}
 }
 
-func (c *Calculator) GetResult(operator string, operands []float64) (float64, error) {
+type Storage interface {
+	Save(result float64) (bool, error)
+}
+
+func (c *Calculator) GetResult(operator string, operands []float64, storage Storage) (float64, error) {
 	var result float64
 	var error error
 	switch operator {
@@ -59,19 +56,6 @@ func (c *Calculator) GetResult(operator string, operands []float64) (float64, er
 			}
 		}
 	}
+	storage.Save(result)
 	return result, error
-}
-
-func (c *Calculator) GetCalculatorMemory(name string) float64{
-	return c.memoryMap[name]
-}
-
-func (c *Calculator) ModifyMemory(name string, add bool, value float64) string{
-	if add {
-		c.memoryMap[name] += value
-	} else {
-		c.memoryMap[name] -= value
-	}
-	result := "Memory called " + name + " update successfully"
-	return result
 }
