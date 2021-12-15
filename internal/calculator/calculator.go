@@ -2,21 +2,24 @@ package calculator
 
 import (
 	"errors"
+	"main/internal/storage"
 )
 
 type Calculator struct {
 	memory float64
+	storage Storage
 }
 
 func New() *Calculator {
-	return &Calculator{memory: 0}
+	storage := storage.NewFile()
+	return &Calculator{memory: 0, storage: storage}
 }
 
 type Storage interface {
 	Save(result float64) (bool, error)
 }
 
-func (c *Calculator) GetResult(operator string, operands []float64, storage Storage) (float64, error) {
+func (c *Calculator) GetResult(operator string, operands []float64) (float64, error) {
 	var result float64
 	var error error
 	switch operator {
@@ -56,6 +59,6 @@ func (c *Calculator) GetResult(operator string, operands []float64, storage Stor
 			}
 		}
 	}
-	storage.Save(result)
+	c.storage.Save(result)
 	return result, error
 }

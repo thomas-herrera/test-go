@@ -2,7 +2,6 @@ package calculator_test
 
 import (
 	"main/internal/calculator"
-	"main/internal/storage"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,7 +9,7 @@ import (
 
 func TestWhenCallGetResultWithMPlusOperandThenSuccess(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("m+", nil, storage.NewFile())
+	result, error := calculator.GetResult("m+", nil)
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 0, result)
@@ -18,7 +17,7 @@ func TestWhenCallGetResultWithMPlusOperandThenSuccess(t *testing.T) {
 
 func TestWhenCallGetResultWithMMinusOperandThenSuccess(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("m-", nil, storage.NewFile())
+	result, error := calculator.GetResult("m-", nil)
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 0, result)
@@ -26,8 +25,8 @@ func TestWhenCallGetResultWithMMinusOperandThenSuccess(t *testing.T) {
 
 func TestWhenCallGetResultWithMPlusOperandThenShouldGetIncrementedMemory(t *testing.T) {
 	calculator := calculator.New()
-	calculator.GetResult("m+", nil, storage.NewFile())
-	result, error := calculator.GetResult("get", nil, storage.NewFile())
+	calculator.GetResult("m+", nil)
+	result, error := calculator.GetResult("get", nil)
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 1, result)
@@ -35,8 +34,8 @@ func TestWhenCallGetResultWithMPlusOperandThenShouldGetIncrementedMemory(t *test
 
 func TestWhenCallGetResultWithMMinusOperandThenShouldGetDecrementedMemory(t *testing.T) {
 	calculator := calculator.New()
-	calculator.GetResult("m-", []float64{}, storage.NewFile())
-	result, error := calculator.GetResult("get", []float64{}, storage.NewFile())
+	calculator.GetResult("m-", []float64{})
+	result, error := calculator.GetResult("get", []float64{})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, -1, result)
@@ -44,9 +43,9 @@ func TestWhenCallGetResultWithMMinusOperandThenShouldGetDecrementedMemory(t *tes
 
 func TestWhenCallGetResultWithResetOperandThenGetResetMemory(t *testing.T) {
 	calculator := calculator.New()
-	calculator.GetResult("m-", []float64{}, storage.NewFile())
-	calculator.GetResult("reset", []float64{}, storage.NewFile())
-	result, error := calculator.GetResult("get", []float64{}, storage.NewFile())
+	calculator.GetResult("m-", []float64{})
+	calculator.GetResult("reset", []float64{})
+	result, error := calculator.GetResult("get", []float64{})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 0, result)
@@ -54,7 +53,7 @@ func TestWhenCallGetResultWithResetOperandThenGetResetMemory(t *testing.T) {
 
 func TestWhenCallGetResultWithAddOperandThenShouldGetSuccessResultOfOperands(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("add", []float64{1, 2, 3}, storage.NewFile())
+	result, error := calculator.GetResult("add", []float64{1, 2, 3})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 6, result)
@@ -62,7 +61,7 @@ func TestWhenCallGetResultWithAddOperandThenShouldGetSuccessResultOfOperands(t *
 
 func TestWhenCallGetResultWithSubstractOperandThenShouldGetSuccessResultOfOperands(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("substract", []float64{4, 1, 1}, storage.NewFile())
+	result, error := calculator.GetResult("substract", []float64{4, 1, 1})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 2, result)
@@ -70,7 +69,7 @@ func TestWhenCallGetResultWithSubstractOperandThenShouldGetSuccessResultOfOperan
 
 func TestWhenCallGetResultWithMultiplyOperandThenShouldGetSuccessResultOfOperands(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("multiply", []float64{1, 2, 3, 4}, storage.NewFile())
+	result, error := calculator.GetResult("multiply", []float64{1, 2, 3, 4})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 24, result)
@@ -78,7 +77,7 @@ func TestWhenCallGetResultWithMultiplyOperandThenShouldGetSuccessResultOfOperand
 
 func TestWhenCallGetResultWithDivideOperandThenShouldGetSuccessResultOfOperands(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("divide", []float64{16, 2, 2}, storage.NewFile())
+	result, error := calculator.GetResult("divide", []float64{16, 2, 2})
 
 	assert.Nil(t, error)
 	assert.EqualValues(t, 4, result)
@@ -86,7 +85,7 @@ func TestWhenCallGetResultWithDivideOperandThenShouldGetSuccessResultOfOperands(
 
 func TestWhenCallGetResultWithDivideOperandWithZeroOperatorThenError(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("divide", []float64{16, 2, 0}, storage.NewFile())
+	result, error := calculator.GetResult("divide", []float64{16, 2, 0})
 
 	assert.EqualValues(t, 0, result)
 	assert.Error(t, error)
@@ -95,7 +94,7 @@ func TestWhenCallGetResultWithDivideOperandWithZeroOperatorThenError(t *testing.
 
 func TestWhenCallGetResultWithInvalidOperandWithThenError(t *testing.T) {
 	calculator := calculator.New()
-	result, error := calculator.GetResult("test", []float64{16, 2, 0}, storage.NewFile())
+	result, error := calculator.GetResult("test", []float64{16, 2, 0})
 
 	assert.EqualValues(t, 0, result)
 	assert.Error(t, error)

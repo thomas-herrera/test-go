@@ -1,15 +1,13 @@
 package handlers
 
 import (
-	"main/internal/calculator"
-	"main/internal/storage"
 	"net/http"
 
 	"github.com/mercadolibre/fury_go-core/pkg/web"
 )
 
 type Calculator interface {
-	GetResult(operator string, operands []float64, storage calculator.Storage) (float64, error)
+	GetResult(operator string, operands []float64) (float64, error)
 }
 
 
@@ -20,8 +18,7 @@ func Calculate(calculator Calculator) web.Handler {
 		if err := web.DecodeJSON(r, &req); err != nil {
 			return err
 		}
-		storage := storage.NewFile()
-		response, err := calculator.GetResult(req.Operator, req.Operands, storage)
+		response, err := calculator.GetResult(req.Operator, req.Operands)
 		if err != nil {
 			return err
 		}

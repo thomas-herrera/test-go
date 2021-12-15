@@ -29,7 +29,6 @@ func (m *Memory) Save(result float64) (bool, error) {
 func (f *File) Save(result float64) (bool, error) {
     b := []byte(fmt.Sprintf("El resultado es: %f", result))
     err := ioutil.WriteFile(f.name, b, 0644)
-	fmt.Println("ERROOOOR", err)
     if err != nil {
         return false, err
     }
